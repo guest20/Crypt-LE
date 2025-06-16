@@ -48,4 +48,4 @@ jobs:
           PERL_USE_UNSAFE_INC: 1 
         run:  
           - perl Makefile.PL && make dist 
-          - mkdir rofl && cd rofl && carton install ../Crypt-LE*gz . && cpanm install ./Crypt-LE*gz
+          - mkdir rofl && cd rofl && mv ../Crypt-LE*gz . && cpanm install ./Crypt-LE*gz
