@@ -35,7 +35,8 @@ jobs:
       - name: git config
         run: |
             git config --global user.email "im-sorry-my-ci-build-is-harssing-you-from@cryt-le.github.com"; 
-            git config --global user.name "CI build of $GITHUB_REF"
+            git config --global user.name "CI build of $GITHUB_REF";
+            git config --global safe.directory '*'; # this is a security feature 
             
       - name: Makefile.PL
         env:
