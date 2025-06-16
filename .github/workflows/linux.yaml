@@ -28,15 +28,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
+      
+      - name: apt-get
+        run:  apt-get update && apt-get install make gcc libssl-dev libnet-ssleay-perl
+        
       - name: git config
         run: |
             git config --global user.email "im-sorry-my-ci-build-is-harssing-you-from@cryt-le.github.com"; 
             git config --global user.name "CI build of $GITHUB_REF"
-      - name: apt-get
-        run: sudo apt-get install make gcc libssl-dev
-        #    sudo apt-get install libnet-ssleay-perl
-        
+            
       - name: Makefile.PL
         env:
           PERL_USE_UNSAFE_INC: 1 
