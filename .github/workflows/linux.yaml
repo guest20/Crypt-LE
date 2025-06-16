@@ -22,29 +22,6 @@ env:
   
 jobs:
  
-#=
-#
-# This step lists t/**.t, so that we can run the tests in a matrix on it in github.
-#   When you run each test as it's own step we get the results testing broken up into a 
-# nice list in the side bar, and github can schedule the test however it likes. 
-#
-# It's worth noting that we skip having t/00-prepare-tests in this list because it is run
-# before each test in the matrix.
-  testlist: 
-    runs-on: ubuntu-latest
-    outputs:
-      tests: ${{ steps.tests.outputs.files }}
-    steps:
-      - uses: actions/checkout@v3
-        # set-output is deprecated, but it looks like you can't read from $GITHUB_ENV in the matrix: section
-      - id: tests
-        run: |
-          find t/ -type f -name '*.t' | \
-          perl -nlE '
-            push @files, $_ unless /00-prepare-tests.t/ 
-            }{
-            printf q{::set-output name=files::[%s]}, ($ENV{test_runner} eq "matrix") ? (join ",", map qq/"$_"/, @files) : (qq/"all"/)
-          '
 
 #=
 #
@@ -54,13 +31,12 @@ jobs:
 # I've included 3 of them because I couldn't decide which is the best choice.
 # (and maybe it would make a nice matrix axis to test both types of release work right)
   test:
-    needs: [ depends, testlist ]
+    needs: [ depends ]
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        test_file: ${{ fromJson(needs.testlist.outputs.tests) }}
 # this matrix is repeated in other build steps.
         perl-version: 
         #  'latest' or 'threaded' might upsest the build cache
@@ -132,7 +108,7 @@ jobs:
         if: env.test_runner == 'make-test'
         env:
           PERL_USE_UNSAFE_INC: 1 
-        run:  perl Makefile.PL 
+        run:  perl Makefile.PL && make test 
 
 # this works fine, but it puts all the (often verbose) output from the make test into
 # a single readmore in the github ui, which is pretty upsetting on my 22017 macbook
@@ -142,19 +118,13 @@ jobs:
     #      PERL_USE_UNSAFE_INC: 1 
     #    run: make test
         
-      - name: prove ${{ matrix.test_file }}
+      - name: prove 
         if: env.test_runner == 'matrix'
         run: |
           PERL_DL_NONLAZY=1 perl -MExtUtils::Command::MM -MTest::Harness -e "
             test_harness(0, 'inc', 'blib/lib', 'blib/arch')
-          " -- ${{ matrix.test_file }}
+          " -- t/
 
-# it might be nice to get a tarball out of this processs instead of just a greeen check mark
-#  - name: make dist 
-    #    if: env.test_runner == 'make-test'
-    #    env:
-    #      PERL_USE_UNSAFE_INC: 1 
-    #    run:  make dist
 
 
 #=
