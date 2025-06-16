@@ -46,7 +46,8 @@ jobs:
         env:
           PERL_USE_UNSAFE_INC: 1 
 #            git ls-files | grep -v .github > MANIFEST  ;
-#            mkdir scratch && cp Crypt-LE*gz scratch/ && cd scratch/ && cpanm -L ./Crypt-LE*gz  ;
+#            make test TEST_VERBOSE=1  ;
         run: |
-            perl Makefile.PL && make manifest && make test && make dist  ;
-
+            perl Makefile.PL && make manifest  ; 
+            make dist  ;
+            mkdir scratch && cp Crypt-LE*gz scratch/ && cd scratch/ && cpanm -L ./Crypt-LE*gz  ;
