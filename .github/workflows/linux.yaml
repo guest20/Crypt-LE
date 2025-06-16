@@ -8,7 +8,7 @@ on:
   
 env:
   # test_runner: prove, make-test, matrix 
-  test_runner: prove
+  test_runner: 'make-test'
   
   OREPAN_VERSION: 0.08
   # DBIC_TRACE: 4
@@ -101,7 +101,7 @@ jobs:
 # -- prove
       - name: Run Tests under prove 
         if: env.test_runner == 'prove'
-        run: prove --merge --verbose --rules='seq=t/0*' --rules='par=**' t/
+        run: prove --merge --verbose t/
         
 # -- Makefile.PL
       - name: Makefile.PL
