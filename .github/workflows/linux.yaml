@@ -47,5 +47,6 @@ jobs:
         env:
           PERL_USE_UNSAFE_INC: 1 
         run: |
+            git ls-files > MANIFEST 
             perl Makefile.PL && make dist 
             mkdir scratch && cd scratch/ && mv ../Crypt-LE*gz . && cpanm install ./Crypt-LE*gz
