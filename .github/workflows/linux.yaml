@@ -6,10 +6,7 @@ on:
     tags-ignore: ['*']
   pull_request:
   
-env:
-  # test_runner: prove, make-test, matrix 
-  test_runner: 'make-test'
-  
+env: 
   DEBIAN_FRONTEND: noninteractive
   CPAN_MIRROR: http://www.cpan.org
   VERBOSE: '' # --verbose
@@ -23,11 +20,6 @@ jobs:
       matrix:
 # this matrix is repeated in other build steps.
         perl-version: 
-        #  'latest' or 'threaded' might upsest the build cache
-#          - '5.8.8' # 
-#          - '5.16'  # 2023-04-04T12:55:57.3582453Z ! Installing the dependencies failed: Installed version (6.63_02) of ExtUtils::MakeMaker is not in range '6.64'
-        #  - '5.24'
-        #  - '5.25' #
           - '5.26' # first with PERL_USE_UNSAFE_INC 
           - '5.36'
           
@@ -41,12 +33,15 @@ jobs:
         run: |
             git config --global user.email "im-sorry-my-ci-build-is-harssing-you-from@cryt-le.github.com"; 
             git config --global user.name "CI build of $GITHUB_REF"
-
+      - name: apt-get
+        run: sudo apt-get install make gcc libssl-dev
+        #    sudo apt-get install libnet-ssleay-perl
+        
       - name: Makefile.PL
-        if: env.test_runner == 'make-test'
         env:
           PERL_USE_UNSAFE_INC: 1 
         run: |
             git ls-files | grep -v .github > MANIFEST 
             perl Makefile.PL && make dist 
             mkdir scratch && cd scratch/ && mv ../Crypt-LE*gz . && cpanm install ./Crypt-LE*gz
+
