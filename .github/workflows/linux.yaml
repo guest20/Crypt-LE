@@ -1,4 +1,4 @@
-ename: linux
+name: linux
 
 on:
   push:
