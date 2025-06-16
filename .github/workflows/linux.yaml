@@ -1,4 +1,4 @@
-name: linux
+ename: linux
 
 on:
   push:
@@ -46,7 +46,7 @@ jobs:
         env:
           PERL_USE_UNSAFE_INC: 1 
 #            git ls-files | grep -v .github > MANIFEST  ;
+#            mkdir scratch && cp Crypt-LE*gz scratch/ && cd scratch/ && cpanm -L ./Crypt-LE*gz  ;
         run: |
-            perl Makefile.PL && make manifest && make dist  ;
-            mkdir scratch && cp Crypt-LE*gz scratch/ && cd scratch/ && cpanm ./Crypt-LE*gz  ;
+            perl Makefile.PL && make manifest && make test && make dist  ;
 
