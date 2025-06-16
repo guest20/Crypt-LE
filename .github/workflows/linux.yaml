@@ -46,4 +46,6 @@ jobs:
         if: env.test_runner == 'make-test'
         env:
           PERL_USE_UNSAFE_INC: 1 
-        run:  perl Makefile.PL && make test 
+        run:  
+          - perl Makefile.PL && make dist 
+          - mkdir rofl && cd rofl && carton install ../Crypt-LE*gz . && cpanm install ./Crypt-LE*gz
