@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: apt-get
-        run:  apt-get update && apt-get install make gcc libssl-dev libnet-ssleay-perl
+        run:  apt-get update && apt-get install -y make gcc libssl-dev libnet-ssleay-perl
         
       - name: git config
         run: |
