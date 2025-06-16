@@ -50,4 +50,9 @@ jobs:
         run: |
             perl Makefile.PL && make manifest  ; 
             make dist  ;
-            mkdir scratch && cp Crypt-LE*gz scratch/ && cd scratch/ && cpanm -L ./Crypt-LE*gz  ;
+            mkdir scratch && cp Crypt-LE*gz scratch/ && cd scratch/ && cpanm -L ./Crypt-LE*gz  ' 
+            
+      - name: debug artifact
+        uses: actions/upload-artifact@v2
+        with:
+          path: Crypt-LE*gz 
