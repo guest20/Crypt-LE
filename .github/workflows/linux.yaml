@@ -13,7 +13,8 @@ env:
   # Makefile.PL is a fake care of Module::Build::Compat version 0.4224
   # it explodes about missing manifests, and if you create it, it freaks out about: 
   #   Could not add META.yml to MANIFEST: Could not open MANIFEST: No such file or directory at /usr/local/lib/perl5/5.26.3/ExtUtils/Manifest.pm line 723.
-  NO_META: 1 
+  NO_META: 1
+  PERL_USE_UNSAFE_INC: 1 
      
   
 jobs:
@@ -43,19 +44,13 @@ jobs:
             git config --global safe.directory '*'; # this is a security feature 
             
       - name: Makefile.PL make dist
-        env:
-          PERL_USE_UNSAFE_INC: 1 
-#            make test TEST_VERBOSE=1  ;
         run: |
             perl Makefile.PL && make manifest  ; 
             make dist  ;
             cpanm --installdeps . && make test
             
       - name: cpanm install 
-        env:
-          PERL_USE_UNSAFE_INC: 1 
-        run: |
-            mkdir scratch && cp Crypt-LE*gz scratch/ && cd scratch/ && cpanm --test-only  ./Crypt-LE*gz
+        run: mkdir scratch && cp Crypt-LE*gz scratch/ && cd scratch/ && cpanm --test-only  ./Crypt-LE*gz
             
       - name: debug artifact
         uses: actions/upload-artifact@v4
